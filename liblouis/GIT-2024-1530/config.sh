@@ -6,7 +6,8 @@ bug_id=$(echo $script_dir | rev | cut -d "/" -f 1 | rev)
 dir_name=/experiment/$benchmark_name/$project_name/$bug_id
 cd $dir_name/src
 
-PROJECT_CFLAGS="-DFORTIFY_SOURCE -fstack-protector-all -fsanitize=address -g"
+# PROJECT_CFLAGS="-DFORTIFY_SOURCE -fstack-protector-all -fsanitize=address -g"
+PROJECT_CFLAGS="-DFORTIFY_SOURCE=0 -fno-stack-protector -fcf-protection=none -fno-omit-frame-pointer -g -Wno-error"
 if [[ -n "${CFLAGS}" ]]; then
   PROJECT_CFLAGS="${PROJECT_CFLAGS} ${CFLAGS}"
 fi
@@ -16,4 +17,19 @@ if [[ -n "${CONFIG_OPTIONS}" ]]; then
   PROJECT_CONFIG_OPTIONS="${PROJECT_CONFIG_OPTIONS} ${CONFIG_OPTIONS}"
 fi
 
-CC=clang CXX=clang++ CFLAGS="${PROJECT_CFLAGS}" CXXFLAGS="${PROJECT_CFLAGS}" ./configure ${PROJECT_CONFIG_OPTIONS}
+CC=gcc CXX=g++ CFLAGS="${PROJECT_CFLAGS}" CXXFLAGS="${PROJECT_CFLAGS}" ./configure ${PROJECT_CONFIG_OPTIONS}
+
+cd $dir_name/patch
+
+# PROJECT_CFLAGS="-DFORTIFY_SOURCE -fstack-protector-all -fsanitize=address -g"
+PROJECT_CFLAGS="-DFORTIFY_SOURCE=0 -fno-stack-protector -fcf-protection=none -fno-omit-frame-pointer -g -Wno-error"
+if [[ -n "${CFLAGS}" ]]; then
+  PROJECT_CFLAGS="${PROJECT_CFLAGS} ${CFLAGS}"
+fi
+
+PROJECT_CONFIG_OPTIONS="--disable-shared --with-yaml"
+if [[ -n "${CONFIG_OPTIONS}" ]]; then
+  PROJECT_CONFIG_OPTIONS="${PROJECT_CONFIG_OPTIONS} ${CONFIG_OPTIONS}"
+fi
+
+CC=gcc CXX=g++ CFLAGS="${PROJECT_CFLAGS}" CXXFLAGS="${PROJECT_CFLAGS}" ./configure ${PROJECT_CONFIG_OPTIONS}

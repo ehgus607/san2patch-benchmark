@@ -11,7 +11,7 @@ mkdir dev-patch
 
 project_url=https://github.com/kamailio/kamailio.git
 fix_commit_id=fc4817064f81ef9a82b1b1468b1b8a4ae352c1f2
-bug_commit_id=5.8.3
+bug_commit_id=95fb987bd402432996c616c6582ef430e9441d93
 
 cd $dir_name
 git clone $project_url src
@@ -20,3 +20,9 @@ git checkout $bug_commit_id
 cp $current_dir/main_parse_msg.c ./misc/fuzz/main_parse_msg.c
 git format-patch -1 $fix_commit_id
 cp *.patch $dir_name/dev-patch/fix.patch
+
+cd $dir_name
+git clone $project_url patch
+cd patch
+git checkout $fix_commit_id
+cp $current_dir/main_parse_msg.c ./misc/fuzz/main_parse_msg.c

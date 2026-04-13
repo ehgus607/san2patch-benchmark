@@ -21,3 +21,8 @@ cp $current_dir/main_parse_msg.c ./misc/fuzz/main_parse_msg.c
 git format-patch -1 $fix_commit_id
 cp *.patch $dir_name/dev-patch/fix.patch
 
+cd $dir_name
+git clone $project_url patch
+cd patch
+git checkout $fix_commit_id
+cp $current_dir/main_parse_msg.c ./misc/fuzz/main_parse_msg.c

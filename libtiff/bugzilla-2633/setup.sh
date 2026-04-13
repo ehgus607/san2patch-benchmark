@@ -24,4 +24,9 @@ cp *.patch $dir_name/dev-patch/fix.patch
 ./autogen.sh
 
 
+cd $dir_name
+git clone $project_url patch
+cd patch
+git checkout $fix_commit_id
+
 ./autogen.sh

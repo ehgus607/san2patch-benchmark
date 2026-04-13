@@ -7,9 +7,13 @@ dir_name=/experiment/$benchmark_name/$project_name/$bug_id
 
 cd $dir_name/src
 
-PROJECT_CFLAGS="-g -O0"
+PROJECT_CFLAGS="-g -O2 -static"
 if [[ -n "${CFLAGS}" ]]; then
   PROJECT_CFLAGS="${PROJECT_CFLAGS} ${CFLAGS}"
+fi
+
+if [[ -n "${R_CFLAGS}" ]]; then
+  PROJECT_CFLAGS="${R_CFLAGS}"
 fi
 
 PROJECT_CONFIG_OPTIONS=" --enable-static --disable-shared"
@@ -17,4 +21,22 @@ if [[ -n "${CONFIG_OPTIONS}" ]]; then
   PROJECT_CONFIG_OPTIONS="${PROJECT_CONFIG_OPTIONS} ${CONFIG_OPTIONS}"
 fi
 
-./configure CFLAGS="${PROJECT_CFLAGS}" ${PROJECT_CONFIG_OPTIONS}
+ ./configure CFLAGS="${PROJECT_CFLAGS}" ${PROJECT_CONFIG_OPTIONS}
+
+ cd $dir_name/patch
+
+PROJECT_CFLAGS="-g -O2 -static"
+if [[ -n "${CFLAGS}" ]]; then
+  PROJECT_CFLAGS="${PROJECT_CFLAGS} ${CFLAGS}"
+fi
+
+if [[ -n "${R_CFLAGS}" ]]; then
+  PROJECT_CFLAGS="${R_CFLAGS}"
+fi
+
+PROJECT_CONFIG_OPTIONS=" --enable-static --disable-shared"
+if [[ -n "${CONFIG_OPTIONS}" ]]; then
+  PROJECT_CONFIG_OPTIONS="${PROJECT_CONFIG_OPTIONS} ${CONFIG_OPTIONS}"
+fi
+
+ ./configure CFLAGS="${PROJECT_CFLAGS}" ${PROJECT_CONFIG_OPTIONS}

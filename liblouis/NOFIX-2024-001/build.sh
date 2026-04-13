@@ -9,13 +9,54 @@ dir_name=/experiment/$benchmark_name/$project_name/$bug_id
 cd $dir_name/src
 
 if [[ -z "${OPT}" ]]; then # if not set, use -O0
-  OPT=-O0
+  OPT=-O2
 fi
 
-PROJECT_CFLAGS="-fsanitize=address -static -ggdb ${OPT}"
-PROJECT_CXXFLAGS="-fsanitize=address -static -ggdb ${OPT}"
-PROJECT_LDFLAGS="-static -fsanitize=address ${OPT}"
+# PROJECT_CFLAGS="-fsanitize=address -static -ggdb ${OPT}"
+# PROJECT_CXXFLAGS="-fsanitize=address -static -ggdb ${OPT}"
+# PROJECT_LDFLAGS="-static -fsanitize=address ${OPT}"
 
+PROJECT_CFLAGS="-static -ggdb ${OPT}"
+PROJECT_CXXFLAGS="-static -ggdb ${OPT}"
+PROJECT_LDFLAGS="-static ${OPT}"
+
+if [[ -n "${CFLAGS}" ]]; then
+  PROJECT_CFLAGS="${PROJECT_CFLAGS} ${CFLAGS}"
+fi
+if [[ -n "${CXXFLAGS}" ]]; then
+  PROJECT_CXXFLAGS="${PROJECT_CXXFLAGS} ${CXXFLAGS}"
+fi
+if [[ -n "${LDFLAGS}" ]]; then
+  PROJECT_LDFLAGS="${PROJECT_LDFLAGS} ${LDFLAGS}"
+fi
+
+if [[ -n "${R_CFLAGS}" ]]; then
+  PROJECT_CFLAGS="${R_CFLAGS}"
+fi
+
+if [[ -n "${R_CXXFLAGS}" ]]; then
+  PROJECT_CXXFLAGS="${R_CXXFLAGS}"
+fi
+
+if [[ -n "${R_LDFLAGS}" ]]; then
+  PROJECT_LDFLAGS="${R_LDFLAGS}"
+fi
+
+make CFLAGS="${PROJECT_CFLAGS}" CXXFLAGS="${PROJECT_CXXFLAGS}" LDFLAGS="${PROJECT_LDFLAGS}" -j`nproc`
+
+cd $dir_name/patch
+
+if [[ -z "${OPT}" ]]; then # if not set, use -O0
+  OPT=-O2
+fi
+
+# PROJECT_CFLAGS="-fsanitize=address -static -ggdb ${OPT}"
+# PROJECT_CXXFLAGS="-fsanitize=address -static -ggdb ${OPT}"
+# PROJECT_LDFLAGS="-static -fsanitize=address ${OPT}"
+
+PROJECT_CFLAGS="-static -ggdb ${OPT}"
+PROJECT_CXXFLAGS="-static -ggdb ${OPT}"
+PROJECT_LDFLAGS="-static ${OPT}"
 
 if [[ -n "${CFLAGS}" ]]; then
   PROJECT_CFLAGS="${PROJECT_CFLAGS} ${CFLAGS}"

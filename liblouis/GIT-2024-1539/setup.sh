@@ -21,3 +21,10 @@ git format-patch -1 --stdout $fix_commit_id > fix.patch
 cp fix.patch $dir_name/dev-patch/fix.patch
 
 ./autogen.sh
+
+cd $dir_name
+git clone $project_url patch
+cd patch
+git checkout $fix_commit_id
+
+./autogen.sh
